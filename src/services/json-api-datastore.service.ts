@@ -152,6 +152,7 @@ export class JsonApiDatastore {
                         data: data[key].map((model: JsonApiModel) => this.buildSingleRelationshipData(model))
                     };
                 } else if (data[key] === null
+                    && belongsToRelationships
                     && !!belongsToRelationships.find((element: any) => element.relationship === key)
                 ) {
                     relationships = relationships || {};
