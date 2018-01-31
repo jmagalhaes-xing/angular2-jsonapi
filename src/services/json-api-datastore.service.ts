@@ -137,6 +137,8 @@ export class JsonApiDatastore {
 
     private getRelationships(data: any): any {
         let relationships: any;
+        const belongsToRelationships = Reflect.getMetadata('BelongsTo', data);
+
         for (let key in data) {
             if (data.hasOwnProperty(key)) {
                 if (data[key] instanceof JsonApiModel) {
@@ -148,6 +150,13 @@ export class JsonApiDatastore {
                     relationships = relationships || {};
                     relationships[key] = {
                         data: data[key].map((model: JsonApiModel) => this.buildSingleRelationshipData(model))
+                    };
+                } else if (data[key] === null
+                    && !!belongsToRelationships.find((element: any) => element.relationship === key)
+                ) {
+                    relationships = relationships || {};
+                    relationships[key] = {
+                        data: null
                     };
                 }
             }
